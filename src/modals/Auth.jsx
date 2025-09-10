@@ -241,34 +241,42 @@ const Auth = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      // 1️⃣ Call login or register API
       const { data } = await axios.post(
         `/api/user/${state}`,
         { name, email, password },
-        { withCredentials: true } // ✅ Important: send cookies
+        { withCredentials: true } // send cookies
       );
 
       if (data.success) {
         toast.success(data.message);
 
-        // 2️⃣ Fetch the authenticated user from backend
-        const userResponse = await axios.get("/api/user/is-auth", {
-          withCredentials: true,
-        });
-
-        if (userResponse.data.success) {
-          setUser(userResponse.data.user); // ✅ Update AppContext
-          navigate("/");                    // ✅ Navigate to dashboard/home
-          setShowUserLogin(false);          // ✅ Close login modal
+        if (state === "register") {
+          // ✅ After registration, switch to login mode
+          setState("login");
+          setName("");
+          setEmail("");
+          setPassword("");
+          toast.success("Please login with your new credentials");
         } else {
-          toast.error("Please login again");
-          navigate("/login");               // fallback
+          // ✅ Login successful
+          const userResponse = await axios.get("/api/user/is-auth", {
+            withCredentials: true,
+          });
+          if (userResponse.data.success) {
+            setUser(userResponse.data.user);
+            navigate("/");           // go to dashboard/home
+            setShowUserLogin(false); // close modal
+          } else {
+            toast.error("Please login again");
+          }
         }
       } else {
         toast.error(data.message);
       }
     } catch (error) {
-      toast.error(error.response?.data?.message || error.message || "Something went wrong");
+      toast.error(
+        error.response?.data?.message || error.message || "Something went wrong"
+      );
     }
   };
 
