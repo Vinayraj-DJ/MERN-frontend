@@ -359,7 +359,9 @@ export const AppContext = createContext(null);
 export const AppContextProvider = ({ children }) => {
   const navigate = useNavigate();
 
+  // =====================
   // ✅ State variables
+  // =====================
   const [user, setUser] = useState(null);
   const [isSeller, setIsSeller] = useState(false);
   const [showUserLogin, setShowUserLogin] = useState(false);
@@ -372,7 +374,7 @@ export const AppContextProvider = ({ children }) => {
   // =====================
   const fetchSeller = async () => {
     try {
-      const { data } = await axios.get("/api/seller/is-auth");
+      const { data } = await axios.get("/api/seller/is-auth", { withCredentials: true });
       setIsSeller(data.success);
     } catch (error) {
       setIsSeller(false);
@@ -381,7 +383,7 @@ export const AppContextProvider = ({ children }) => {
 
   const logoutSeller = async () => {
     try {
-      const { data } = await axios.post("/api/seller/logout");
+      const { data } = await axios.post("/api/seller/logout", {}, { withCredentials: true });
       if (data.success) {
         setIsSeller(false);
         toast.success("Seller logged out successfully");
@@ -397,7 +399,7 @@ export const AppContextProvider = ({ children }) => {
   // =====================
   const fetchUser = async () => {
     try {
-      const { data } = await axios.get("/api/user/is-auth");
+      const { data } = await axios.get("/api/user/is-auth", { withCredentials: true });
       if (data.success) {
         setUser(data.user);
         setCartItems(data.user.cart || {});
@@ -411,7 +413,7 @@ export const AppContextProvider = ({ children }) => {
 
   const logoutUser = async () => {
     try {
-      const { data } = await axios.post("/api/user/logout");
+      const { data } = await axios.post("/api/user/logout", {}, { withCredentials: true });
       if (data.success) {
         setUser(null);
         setCartItems({});
@@ -428,7 +430,7 @@ export const AppContextProvider = ({ children }) => {
   // =====================
   const fetchProducts = async () => {
     try {
-      const { data } = await axios.get("/api/product/list");
+      const { data } = await axios.get("/api/product/list", { withCredentials: true });
       if (data.success) {
         setProducts(data.products);
       } else {
@@ -443,21 +445,21 @@ export const AppContextProvider = ({ children }) => {
   // ✅ Cart Operations
   // =====================
   const addToCart = (itemId) => {
-    let updatedCart = structuredClone(cartItems || {});
+    const updatedCart = structuredClone(cartItems || {});
     updatedCart[itemId] = (updatedCart[itemId] || 0) + 1;
     setCartItems(updatedCart);
     toast.success("Added to cart");
   };
 
   const updateCartItem = (itemId, quantity) => {
-    let updatedCart = structuredClone(cartItems);
+    const updatedCart = structuredClone(cartItems);
     updatedCart[itemId] = quantity;
     setCartItems(updatedCart);
     toast.success("Cart updated");
   };
 
   const removeFromCart = (itemId) => {
-    let updatedCart = structuredClone(cartItems);
+    const updatedCart = structuredClone(cartItems);
     if (updatedCart[itemId]) {
       updatedCart[itemId] -= 1;
       if (updatedCart[itemId] === 0) delete updatedCart[itemId];
@@ -485,7 +487,7 @@ export const AppContextProvider = ({ children }) => {
     const updateCartBackend = async () => {
       if (!user) return;
       try {
-        const { data } = await axios.post("/api/cart/update", { cartItems });
+        const { data } = await axios.post("/api/cart/update", { cartItems }, { withCredentials: true });
         if (!data.success) toast.error(data.message);
       } catch (error) {
         toast.error(error.message);
