@@ -393,7 +393,7 @@ const Cart = () => {
               <div
                 onClick={() => {
                   navigate(`product/${product.category}/${product._id}`);
-                  scrollTo(0, 0);
+                  window.scrollTo(0, 0);
                 }}
                 className="cursor-pointer w-24 h-24 flex items-center justify-center border border-gray-300 rounded cusror-pointer"
               >

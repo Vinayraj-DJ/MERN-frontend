@@ -39,7 +39,7 @@ const Address = () => {
     if (!user) {
       navigate("/cart");
     }
-  }, []);
+  }, [user, navigate]);
   return (
     <div className="mt-12 flex flex-col md:flex-row gap-6 p-6 bg-gray-100 rounded-lg shadow-md">
       {/* Left Side: Address Fields */}
