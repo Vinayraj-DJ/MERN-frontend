@@ -1,14 +1,98 @@
+// // // import { useContext, useEffect, useState } from "react";
+// // // import { AppContext, useAppContext } from "../../context/AppContext";
+// // // import { assets, dummyOrders } from "../../assets/assets";
+// // // import toast from "react-hot-toast";
+
+// // // const Orders = () => {
+// // //   const boxIcon =
+// // //     "https://raw.githubusercontent.com/prebuiltui/prebuiltui/main/assets/e-commerce/boxIcon.svg";
+
+// // //   const [orders, setOrders] = useState([]);
+// // //   const { axios } = useContext(AppContext);
+// // //   const fetchOrders = async () => {
+// // //     try {
+// // //       const { data } = await axios.get("/api/order/seller");
+// // //       if (data.success) {
+// // //         setOrders(data.orders);
+// // //       } else {
+// // //         toast.error(data.message);
+// // //       }
+// // //     } catch (error) {
+// // //       toast.error(error.message);
+// // //     }
+// // //   };
+// // //   useEffect(() => {
+// // //     fetchOrders();
+// // //   }, []);
+
+// // //   return (
+// // //     <div className="md:p-10 p-4 space-y-4">
+// // //       <h2 className="text-lg font-medium">Orders List</h2>
+// // //       {orders.map((order, index) => (
+// // //         <div
+// // //           key={index}
+// // //           className="flex flex-col md:grid md:grid-cols-[2fr_1fr_1fr_1fr] md:items-center gap-5 p-5 max-w-4xl rounded-md border border-gray-300 text-gray-800"
+// // //         >
+// // //           <div className="flex gap-5">
+// // //             <img
+// // //               className="w-12 h-12 object-cover opacity-60"
+// // //               src={`http://localhost:5000/images/${order.items[0].product.image[0]}`}
+// // //               alt="boxIcon"
+// // //             />
+// // //             <>
+// // //               {order.items.map((item, index) => (
+// // //                 <div key={index} className="flex flex-col justify-center">
+// // //                   <p className="font-medium">
+// // //                     {item.product.name}{" "}
+// // //                     <span
+// // //                       className={`text-indigo-500 ${
+// // //                         item.quantity < 2 && "hidden"
+// // //                       }`}
+// // //                     >
+// // //                       x {item.quantity}
+// // //                     </span>
+// // //                   </p>
+// // //                 </div>
+// // //               ))}
+// // //             </>
+// // //           </div>
+
+// // //           <div className="text-sm">
+// // //             <p className="font-medium mb-1">
+// // //               {order.address.firstName} {order.address.lastName}
+// // //             </p>
+// // //             <p>
+// // //               {order.address.street}, {order.address.city},{" "}
+// // //               {order.address.state},{order.address.zipcode},{" "}
+// // //               {order.address.country}
+// // //             </p>
+// // //           </div>
+
+// // //           <p className="font-medium text-base my-auto text-black/70">
+// // //             ${order.amount}
+// // //           </p>
+
+// // //           <div className="flex flex-col text-sm">
+// // //             <p>Method: {order.paymentType}</p>
+// // //             <p>Date: {order.orderDate}</p>
+// // //             <p>Payment: {order.isPaid ? "Paid" : "Pending"}</p>
+// // //           </div>
+// // //         </div>
+// // //       ))}
+// // //     </div>
+// // //   );
+// // // };
+// // // export default Orders;
+
+
 // // import { useContext, useEffect, useState } from "react";
-// // import { AppContext, useAppContext } from "../../context/AppContext";
-// // import { assets, dummyOrders } from "../../assets/assets";
+// // import { AppContext } from "../../context/AppContext";
 // // import toast from "react-hot-toast";
 
 // // const Orders = () => {
-// //   const boxIcon =
-// //     "https://raw.githubusercontent.com/prebuiltui/prebuiltui/main/assets/e-commerce/boxIcon.svg";
-
 // //   const [orders, setOrders] = useState([]);
 // //   const { axios } = useContext(AppContext);
+
 // //   const fetchOrders = async () => {
 // //     try {
 // //       const { data } = await axios.get("/api/order/seller");
@@ -21,6 +105,25 @@
 // //       toast.error(error.message);
 // //     }
 // //   };
+
+// //   const cancelOrder = async (orderId) => {
+// //     try {
+// //       const { data } = await axios.put(`/api/order/cancel/${orderId}`);
+// //       if (data.success) {
+// //         toast.success("Order cancelled successfully!");
+// //         setOrders((prevOrders) =>
+// //           prevOrders.map((order) =>
+// //             order._id === orderId ? { ...order, status: "Cancelled" } : order
+// //           )
+// //         );
+// //       } else {
+// //         toast.error(data.message);
+// //       }
+// //     } catch (error) {
+// //       toast.error(error.message);
+// //     }
+// //   };
+
 // //   useEffect(() => {
 // //     fetchOrders();
 // //   }, []);
@@ -28,25 +131,31 @@
 // //   return (
 // //     <div className="md:p-10 p-4 space-y-4">
 // //       <h2 className="text-lg font-medium">Orders List</h2>
+
 // //       {orders.map((order, index) => (
 // //         <div
 // //           key={index}
 // //           className="flex flex-col md:grid md:grid-cols-[2fr_1fr_1fr_1fr] md:items-center gap-5 p-5 max-w-4xl rounded-md border border-gray-300 text-gray-800"
 // //         >
+// //           {/* Product Info */}
 // //           <div className="flex gap-5">
 // //             <img
 // //               className="w-12 h-12 object-cover opacity-60"
-// //               src={`http://localhost:5000/images/${order.items[0].product.image[0]}`}
-// //               alt="boxIcon"
+// //               src={
+// //                 order.items[0]?.product?.image?.length > 0
+// //                   ? `http://localhost:5000/images/${order.items[0].product.image[0]}`
+// //                   : "/placeholder.png"
+// //               }
+// //               alt={order.items[0]?.product?.name || "Product Deleted"}
 // //             />
-// //             <>
-// //               {order.items.map((item, index) => (
-// //                 <div key={index} className="flex flex-col justify-center">
+// //             <div>
+// //               {order.items.map((item, idx) => (
+// //                 <div key={idx} className="flex flex-col justify-center">
 // //                   <p className="font-medium">
-// //                     {item.product.name}{" "}
+// //                     {item?.product?.name || "Product Deleted"}{" "}
 // //                     <span
 // //                       className={`text-indigo-500 ${
-// //                         item.quantity < 2 && "hidden"
+// //                         item.quantity < 2 ? "hidden" : ""
 // //                       }`}
 // //                     >
 // //                       x {item.quantity}
@@ -54,34 +163,66 @@
 // //                   </p>
 // //                 </div>
 // //               ))}
-// //             </>
+// //             </div>
 // //           </div>
 
+// //           {/* Address */}
 // //           <div className="text-sm">
 // //             <p className="font-medium mb-1">
-// //               {order.address.firstName} {order.address.lastName}
+// //               {order.address?.firstName} {order.address?.lastName}
 // //             </p>
 // //             <p>
-// //               {order.address.street}, {order.address.city},{" "}
-// //               {order.address.state},{order.address.zipcode},{" "}
-// //               {order.address.country}
+// //               {order.address?.street}, {order.address?.city},{" "}
+// //               {order.address?.state}, {order.address?.zipcode},{" "}
+// //               {order.address?.country}
 // //             </p>
 // //           </div>
 
+// //           {/* Amount */}
 // //           <p className="font-medium text-base my-auto text-black/70">
 // //             ${order.amount}
 // //           </p>
 
-// //           <div className="flex flex-col text-sm">
+// //           {/* Payment & Status */}
+// //           <div className="flex flex-col text-sm gap-2">
 // //             <p>Method: {order.paymentType}</p>
-// //             <p>Date: {order.orderDate}</p>
-// //             <p>Payment: {order.isPaid ? "Paid" : "Pending"}</p>
+// //             <p>Date: {order.orderDate || new Date(order.createdAt).toLocaleString()}</p>
+// //             <p>
+// //               Payment: {order.isPaid ? "Paid" : "Pending"}
+// //             </p>
+// //             <p>
+// //               Status:{" "}
+// //               <span
+// //                 className={`font-semibold ${
+// //                   order.status === "Cancelled"
+// //                     ? "text-red-600"
+// //                     : order.status === "Delivered"
+// //                     ? "text-green-600"
+// //                     : "text-yellow-600"
+// //                 }`}
+// //               >
+// //                 {order.status || "Pending"}
+// //               </span>
+// //             </p>
+// //             {/* Cancel Button */}
+// //             <button
+// //               className={`px-4 py-1 rounded font-medium mt-2 ${
+// //                 order.status === "Cancelled"
+// //                   ? "bg-gray-400 text-white cursor-not-allowed"
+// //                   : "bg-red-500 text-white hover:bg-red-600"
+// //               }`}
+// //               disabled={order.status === "Cancelled"}
+// //               onClick={() => cancelOrder(order._id)}
+// //             >
+// //               {order.status === "Cancelled" ? "Cancelled" : "Cancel Order"}
+// //             </button>
 // //           </div>
 // //         </div>
 // //       ))}
 // //     </div>
 // //   );
 // // };
+
 // // export default Orders;
 
 
@@ -93,9 +234,14 @@
 //   const [orders, setOrders] = useState([]);
 //   const { axios } = useContext(AppContext);
 
+//   // Backend URL from environment variable
+//   const BACKEND_URL = import.meta.env.VITE_BACKEND_URL; // Vite
+//   // const BACKEND_URL = process.env.REACT_APP_BACKEND_URL; // CRA
+
+//   // Fetch orders from backend
 //   const fetchOrders = async () => {
 //     try {
-//       const { data } = await axios.get("/api/order/seller");
+//       const { data } = await axios.get(`${BACKEND_URL}/api/order/seller`);
 //       if (data.success) {
 //         setOrders(data.orders);
 //       } else {
@@ -106,9 +252,10 @@
 //     }
 //   };
 
+//   // Cancel an order
 //   const cancelOrder = async (orderId) => {
 //     try {
-//       const { data } = await axios.put(`/api/order/cancel/${orderId}`);
+//       const { data } = await axios.put(`${BACKEND_URL}/api/order/cancel/${orderId}`);
 //       if (data.success) {
 //         toast.success("Order cancelled successfully!");
 //         setOrders((prevOrders) =>
@@ -143,7 +290,7 @@
 //               className="w-12 h-12 object-cover opacity-60"
 //               src={
 //                 order.items[0]?.product?.image?.length > 0
-//                   ? `http://localhost:5000/images/${order.items[0].product.image[0]}`
+//                   ? `${BACKEND_URL}/images/${order.items[0].product.image[0]}`
 //                   : "/placeholder.png"
 //               }
 //               alt={order.items[0]?.product?.name || "Product Deleted"}
@@ -187,9 +334,7 @@
 //           <div className="flex flex-col text-sm gap-2">
 //             <p>Method: {order.paymentType}</p>
 //             <p>Date: {order.orderDate || new Date(order.createdAt).toLocaleString()}</p>
-//             <p>
-//               Payment: {order.isPaid ? "Paid" : "Pending"}
-//             </p>
+//             <p>Payment: {order.isPaid ? "Paid" : "Pending"}</p>
 //             <p>
 //               Status:{" "}
 //               <span
@@ -228,34 +373,66 @@
 
 import { useContext, useEffect, useState } from "react";
 import { AppContext } from "../../context/AppContext";
+import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 
 const Orders = () => {
   const [orders, setOrders] = useState([]);
   const { axios } = useContext(AppContext);
+  const navigate = useNavigate();
 
   // Backend URL from environment variable
-  const BACKEND_URL = import.meta.env.VITE_BACKEND_URL; // Vite
-  // const BACKEND_URL = process.env.REACT_APP_BACKEND_URL; // CRA
+  const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 
   // Fetch orders from backend
   const fetchOrders = async () => {
     try {
-      const { data } = await axios.get(`${BACKEND_URL}/api/order/seller`);
+      // Get token from localStorage
+      const token = localStorage.getItem("sellerToken");
+      if (!token) {
+        toast.error("Please login as seller");
+        navigate("/seller");
+        return;
+      }
+
+      const { data } = await axios.get(`${BACKEND_URL}/api/order/seller`, {
+        headers: {
+          Authorization: `Bearer ${token}`, // Token in headers
+        },
+        withCredentials: true, // Only if backend uses cookies
+      });
+
       if (data.success) {
         setOrders(data.orders);
       } else {
         toast.error(data.message);
       }
     } catch (error) {
-      toast.error(error.message);
+      toast.error(error.response?.data?.message || error.message);
     }
   };
 
   // Cancel an order
   const cancelOrder = async (orderId) => {
     try {
-      const { data } = await axios.put(`${BACKEND_URL}/api/order/cancel/${orderId}`);
+      const token = localStorage.getItem("sellerToken");
+      if (!token) {
+        toast.error("Please login as seller");
+        navigate("/seller");
+        return;
+      }
+
+      const { data } = await axios.put(
+        `${BACKEND_URL}/api/order/cancel/${orderId}`,
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+          withCredentials: true,
+        }
+      );
+
       if (data.success) {
         toast.success("Order cancelled successfully!");
         setOrders((prevOrders) =>
@@ -267,7 +444,7 @@ const Orders = () => {
         toast.error(data.message);
       }
     } catch (error) {
-      toast.error(error.message);
+      toast.error(error.response?.data?.message || error.message);
     }
   };
 
@@ -279,91 +456,99 @@ const Orders = () => {
     <div className="md:p-10 p-4 space-y-4">
       <h2 className="text-lg font-medium">Orders List</h2>
 
-      {orders.map((order, index) => (
-        <div
-          key={index}
-          className="flex flex-col md:grid md:grid-cols-[2fr_1fr_1fr_1fr] md:items-center gap-5 p-5 max-w-4xl rounded-md border border-gray-300 text-gray-800"
-        >
-          {/* Product Info */}
-          <div className="flex gap-5">
-            <img
-              className="w-12 h-12 object-cover opacity-60"
-              src={
-                order.items[0]?.product?.image?.length > 0
-                  ? `${BACKEND_URL}/images/${order.items[0].product.image[0]}`
-                  : "/placeholder.png"
-              }
-              alt={order.items[0]?.product?.name || "Product Deleted"}
-            />
-            <div>
-              {order.items.map((item, idx) => (
-                <div key={idx} className="flex flex-col justify-center">
-                  <p className="font-medium">
-                    {item?.product?.name || "Product Deleted"}{" "}
-                    <span
-                      className={`text-indigo-500 ${
-                        item.quantity < 2 ? "hidden" : ""
-                      }`}
-                    >
-                      x {item.quantity}
-                    </span>
-                  </p>
-                </div>
-              ))}
+      {orders.length > 0 ? (
+        orders.map((order, index) => (
+          <div
+            key={index}
+            className="flex flex-col md:grid md:grid-cols-[2fr_1fr_1fr_1fr] md:items-center gap-5 p-5 max-w-4xl rounded-md border border-gray-300 text-gray-800"
+          >
+            {/* Product Info */}
+            <div className="flex gap-5">
+              <img
+                className="w-12 h-12 object-cover opacity-60"
+                src={
+                  order.items[0]?.product?.image?.length > 0
+                    ? `${BACKEND_URL}/images/${order.items[0].product.image[0]}`
+                    : "/placeholder.png"
+                }
+                alt={order.items[0]?.product?.name || "Product Deleted"}
+              />
+              <div>
+                {order.items.map((item, idx) => (
+                  <div key={idx} className="flex flex-col justify-center">
+                    <p className="font-medium">
+                      {item?.product?.name || "Product Deleted"}{" "}
+                      <span
+                        className={`text-indigo-500 ${
+                          item.quantity < 2 ? "hidden" : ""
+                        }`}
+                      >
+                        x {item.quantity}
+                      </span>
+                    </p>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Address */}
+            <div className="text-sm">
+              <p className="font-medium mb-1">
+                {order.address?.firstName} {order.address?.lastName}
+              </p>
+              <p>
+                {order.address?.street}, {order.address?.city},{" "}
+                {order.address?.state}, {order.address?.zipcode},{" "}
+                {order.address?.country}
+              </p>
+            </div>
+
+            {/* Amount */}
+            <p className="font-medium text-base my-auto text-black/70">
+              ${order.amount}
+            </p>
+
+            {/* Payment & Status */}
+            <div className="flex flex-col text-sm gap-2">
+              <p>Method: {order.paymentType}</p>
+              <p>
+                Date:{" "}
+                {order.orderDate || new Date(order.createdAt).toLocaleString()}
+              </p>
+              <p>Payment: {order.isPaid ? "Paid" : "Pending"}</p>
+              <p>
+                Status:{" "}
+                <span
+                  className={`font-semibold ${
+                    order.status === "Cancelled"
+                      ? "text-red-600"
+                      : order.status === "Delivered"
+                      ? "text-green-600"
+                      : "text-yellow-600"
+                  }`}
+                >
+                  {order.status || "Pending"}
+                </span>
+              </p>
+
+              {/* Cancel Button */}
+              <button
+                className={`px-4 py-1 rounded font-medium mt-2 ${
+                  order.status === "Cancelled"
+                    ? "bg-gray-400 text-white cursor-not-allowed"
+                    : "bg-red-500 text-white hover:bg-red-600"
+                }`}
+                disabled={order.status === "Cancelled"}
+                onClick={() => cancelOrder(order._id)}
+              >
+                {order.status === "Cancelled" ? "Cancelled" : "Cancel Order"}
+              </button>
             </div>
           </div>
-
-          {/* Address */}
-          <div className="text-sm">
-            <p className="font-medium mb-1">
-              {order.address?.firstName} {order.address?.lastName}
-            </p>
-            <p>
-              {order.address?.street}, {order.address?.city},{" "}
-              {order.address?.state}, {order.address?.zipcode},{" "}
-              {order.address?.country}
-            </p>
-          </div>
-
-          {/* Amount */}
-          <p className="font-medium text-base my-auto text-black/70">
-            ${order.amount}
-          </p>
-
-          {/* Payment & Status */}
-          <div className="flex flex-col text-sm gap-2">
-            <p>Method: {order.paymentType}</p>
-            <p>Date: {order.orderDate || new Date(order.createdAt).toLocaleString()}</p>
-            <p>Payment: {order.isPaid ? "Paid" : "Pending"}</p>
-            <p>
-              Status:{" "}
-              <span
-                className={`font-semibold ${
-                  order.status === "Cancelled"
-                    ? "text-red-600"
-                    : order.status === "Delivered"
-                    ? "text-green-600"
-                    : "text-yellow-600"
-                }`}
-              >
-                {order.status || "Pending"}
-              </span>
-            </p>
-            {/* Cancel Button */}
-            <button
-              className={`px-4 py-1 rounded font-medium mt-2 ${
-                order.status === "Cancelled"
-                  ? "bg-gray-400 text-white cursor-not-allowed"
-                  : "bg-red-500 text-white hover:bg-red-600"
-              }`}
-              disabled={order.status === "Cancelled"}
-              onClick={() => cancelOrder(order._id)}
-            >
-              {order.status === "Cancelled" ? "Cancelled" : "Cancel Order"}
-            </button>
-          </div>
-        </div>
-      ))}
+        ))
+      ) : (
+        <p className="text-gray-500">No orders found</p>
+      )}
     </div>
   );
 };
