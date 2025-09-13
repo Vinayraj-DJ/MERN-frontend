@@ -371,365 +371,36 @@
 // export default Orders;
 
 
-// import { useContext, useEffect, useState } from "react";
-// import { AppContext } from "../../context/AppContext";
-// import { useNavigate } from "react-router-dom";
-// import toast from "react-hot-toast";
-
-// const Orders = () => {
-//   const [orders, setOrders] = useState([]);
-//   const { axios } = useContext(AppContext);
-//   const navigate = useNavigate();
-
-//   // Backend URL from environment variable
-//   const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
-
-//   // Fetch orders from backend
-//   const fetchOrders = async () => {
-//     try {
-//       // Get token from localStorage
-//       const token = localStorage.getItem("sellerToken");
-//       if (!token) {
-//         toast.error("Please login as seller");
-//         navigate("/seller");
-//         return;
-//       }
-
-//       const { data } = await axios.get(`${BACKEND_URL}/api/order/seller`, {
-//         headers: {
-//           Authorization: `Bearer ${token}`, // Token in headers
-//         },
-//         withCredentials: true, // Only if backend uses cookies
-//       });
-
-//       if (data.success) {
-//         setOrders(data.orders);
-//       } else {
-//         toast.error(data.message);
-//       }
-//     } catch (error) {
-//       toast.error(error.response?.data?.message || error.message);
-//     }
-//   };
-
-//   // Cancel an order
-//   const cancelOrder = async (orderId) => {
-//     try {
-//       const token = localStorage.getItem("sellerToken");
-//       if (!token) {
-//         toast.error("Please login as seller");
-//         navigate("/seller");
-//         return;
-//       }
-
-//       const { data } = await axios.put(
-//         `${BACKEND_URL}/api/order/cancel/${orderId}`,
-//         {},
-//         {
-//           headers: {
-//             Authorization: `Bearer ${token}`,
-//           },
-//           withCredentials: true,
-//         }
-//       );
-
-//       if (data.success) {
-//         toast.success("Order cancelled successfully!");
-//         setOrders((prevOrders) =>
-//           prevOrders.map((order) =>
-//             order._id === orderId ? { ...order, status: "Cancelled" } : order
-//           )
-//         );
-//       } else {
-//         toast.error(data.message);
-//       }
-//     } catch (error) {
-//       toast.error(error.response?.data?.message || error.message);
-//     }
-//   };
-
-//   useEffect(() => {
-//     fetchOrders();
-//   }, []);
-
-//   return (
-//     <div className="md:p-10 p-4 space-y-4">
-//       <h2 className="text-lg font-medium">Orders List</h2>
-
-//       {orders.length > 0 ? (
-//         orders.map((order, index) => (
-//           <div
-//             key={index}
-//             className="flex flex-col md:grid md:grid-cols-[2fr_1fr_1fr_1fr] md:items-center gap-5 p-5 max-w-4xl rounded-md border border-gray-300 text-gray-800"
-//           >
-//             {/* Product Info */}
-//             <div className="flex gap-5">
-//               <img
-//                 className="w-12 h-12 object-cover opacity-60"
-//                 src={
-//                   order.items[0]?.product?.image?.length > 0
-//                     ? `${BACKEND_URL}/images/${order.items[0].product.image[0]}`
-//                     : "/placeholder.png"
-//                 }
-//                 alt={order.items[0]?.product?.name || "Product Deleted"}
-//               />
-//               <div>
-//                 {order.items.map((item, idx) => (
-//                   <div key={idx} className="flex flex-col justify-center">
-//                     <p className="font-medium">
-//                       {item?.product?.name || "Product Deleted"}{" "}
-//                       <span
-//                         className={`text-indigo-500 ${
-//                           item.quantity < 2 ? "hidden" : ""
-//                         }`}
-//                       >
-//                         x {item.quantity}
-//                       </span>
-//                     </p>
-//                   </div>
-//                 ))}
-//               </div>
-//             </div>
-
-//             {/* Address */}
-//             <div className="text-sm">
-//               <p className="font-medium mb-1">
-//                 {order.address?.firstName} {order.address?.lastName}
-//               </p>
-//               <p>
-//                 {order.address?.street}, {order.address?.city},{" "}
-//                 {order.address?.state}, {order.address?.zipcode},{" "}
-//                 {order.address?.country}
-//               </p>
-//             </div>
-
-//             {/* Amount */}
-//             <p className="font-medium text-base my-auto text-black/70">
-//               ${order.amount}
-//             </p>
-
-//             {/* Payment & Status */}
-//             <div className="flex flex-col text-sm gap-2">
-//               <p>Method: {order.paymentType}</p>
-//               <p>
-//                 Date:{" "}
-//                 {order.orderDate || new Date(order.createdAt).toLocaleString()}
-//               </p>
-//               <p>Payment: {order.isPaid ? "Paid" : "Pending"}</p>
-//               <p>
-//                 Status:{" "}
-//                 <span
-//                   className={`font-semibold ${
-//                     order.status === "Cancelled"
-//                       ? "text-red-600"
-//                       : order.status === "Delivered"
-//                       ? "text-green-600"
-//                       : "text-yellow-600"
-//                   }`}
-//                 >
-//                   {order.status || "Pending"}
-//                 </span>
-//               </p>
-
-//               {/* Cancel Button */}
-//               <button
-//                 className={`px-4 py-1 rounded font-medium mt-2 ${
-//                   order.status === "Cancelled"
-//                     ? "bg-gray-400 text-white cursor-not-allowed"
-//                     : "bg-red-500 text-white hover:bg-red-600"
-//                 }`}
-//                 disabled={order.status === "Cancelled"}
-//                 onClick={() => cancelOrder(order._id)}
-//               >
-//                 {order.status === "Cancelled" ? "Cancelled" : "Cancel Order"}
-//               </button>
-//             </div>
-//           </div>
-//         ))
-//       ) : (
-//         <p className="text-gray-500">No orders found</p>
-//       )}
-//     </div>
-//   );
-// };
-
-// export default Orders;
-
-
-// import { useContext, useEffect, useState } from "react";
-// import { AppContext } from "../../context/AppContext";
-// import toast from "react-hot-toast";
-
-// const Orders = () => {
-//   const [orders, setOrders] = useState([]);
-//   const { axios } = useContext(AppContext);
-
-//   // Backend URL from environment variable
-//   const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
-
-//   // Fetch orders from backend
-//   const fetchOrders = async () => {
-//     try {
-//       const { data } = await axios.get(`${BACKEND_URL}/api/order/seller`, {
-//         withCredentials: true, // ✅ send cookies automatically
-//       });
-
-//       if (data.success) {
-//         setOrders(data.orders);
-//       } else {
-//         toast.error(data.message);
-//       }
-//     } catch (error) {
-//       toast.error(error.response?.data?.message || error.message);
-//     }
-//   };
-
-//   // Cancel an order
-//   const cancelOrder = async (orderId) => {
-//     try {
-//       const { data } = await axios.put(
-//         `${BACKEND_URL}/api/order/cancel/${orderId}`,
-//         {},
-//         {
-//           withCredentials: true, // ✅ send cookies automatically
-//         }
-//       );
-
-//       if (data.success) {
-//         toast.success("Order cancelled successfully!");
-//         setOrders((prevOrders) =>
-//           prevOrders.map((order) =>
-//             order._id === orderId ? { ...order, status: "Cancelled" } : order
-//           )
-//         );
-//       } else {
-//         toast.error(data.message);
-//       }
-//     } catch (error) {
-//       toast.error(error.response?.data?.message || error.message);
-//     }
-//   };
-
-//   useEffect(() => {
-//     fetchOrders();
-//   }, []);
-
-//   return (
-//     <div className="md:p-10 p-4 space-y-4">
-//       <h2 className="text-lg font-medium">Orders List</h2>
-
-//       {orders.length > 0 ? (
-//         orders.map((order, index) => (
-//           <div
-//             key={index}
-//             className="flex flex-col md:grid md:grid-cols-[2fr_1fr_1fr_1fr] md:items-center gap-5 p-5 max-w-4xl rounded-md border border-gray-300 text-gray-800"
-//           >
-//             {/* Product Info */}
-//             <div className="flex gap-5">
-//               <img
-//                 className="w-12 h-12 object-cover opacity-60"
-//                 src={
-//                   order.items[0]?.product?.image?.length > 0
-//                     ? `${BACKEND_URL}/images/${order.items[0].product.image[0]}`
-//                     : "/placeholder.png"
-//                 }
-//                 alt={order.items[0]?.product?.name || "Product Deleted"}
-//               />
-//               <div>
-//                 {order.items.map((item, idx) => (
-//                   <div key={idx} className="flex flex-col justify-center">
-//                     <p className="font-medium">
-//                       {item?.product?.name || "Product Deleted"}{" "}
-//                       <span
-//                         className={`text-indigo-500 ${
-//                           item.quantity < 2 ? "hidden" : ""
-//                         }`}
-//                       >
-//                         x {item.quantity}
-//                       </span>
-//                     </p>
-//                   </div>
-//                 ))}
-//               </div>
-//             </div>
-
-//             {/* Address */}
-//             <div className="text-sm">
-//               <p className="font-medium mb-1">
-//                 {order.address?.firstName} {order.address?.lastName}
-//               </p>
-//               <p>
-//                 {order.address?.street}, {order.address?.city},{" "}
-//                 {order.address?.state}, {order.address?.zipcode},{" "}
-//                 {order.address?.country}
-//               </p>
-//             </div>
-
-//             {/* Amount */}
-//             <p className="font-medium text-base my-auto text-black/70">
-//               ${order.amount}
-//             </p>
-
-//             {/* Payment & Status */}
-//             <div className="flex flex-col text-sm gap-2">
-//               <p>Method: {order.paymentType}</p>
-//               <p>
-//                 Date:{" "}
-//                 {order.orderDate || new Date(order.createdAt).toLocaleString()}
-//               </p>
-//               <p>Payment: {order.isPaid ? "Paid" : "Pending"}</p>
-//               <p>
-//                 Status:{" "}
-//                 <span
-//                   className={`font-semibold ${
-//                     order.status === "Cancelled"
-//                       ? "text-red-600"
-//                       : order.status === "Delivered"
-//                       ? "text-green-600"
-//                       : "text-yellow-600"
-//                   }`}
-//                 >
-//                   {order.status || "Pending"}
-//                 </span>
-//               </p>
-
-//               {/* Cancel Button */}
-//               <button
-//                 className={`px-4 py-1 rounded font-medium mt-2 ${
-//                   order.status === "Cancelled"
-//                     ? "bg-gray-400 text-white cursor-not-allowed"
-//                     : "bg-red-500 text-white hover:bg-red-600"
-//                 }`}
-//                 disabled={order.status === "Cancelled"}
-//                 onClick={() => cancelOrder(order._id)}
-//               >
-//                 {order.status === "Cancelled" ? "Cancelled" : "Cancel Order"}
-//               </button>
-//             </div>
-//           </div>
-//         ))
-//       ) : (
-//         <p className="text-gray-500">No orders found</p>
-//       )}
-//     </div>
-//   );
-// };
-
-// export default Orders;
-
-
 import { useContext, useEffect, useState } from "react";
 import { AppContext } from "../../context/AppContext";
+import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 
 const Orders = () => {
   const [orders, setOrders] = useState([]);
   const { axios } = useContext(AppContext);
+  const navigate = useNavigate();
 
+  // Backend URL from environment variable
+  const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
+
+  // Fetch orders from backend
   const fetchOrders = async () => {
     try {
-      // ✅ send cookies only
-      const { data } = await axios.get("/api/order/seller", { withCredentials: true });
+      // Get token from localStorage
+      const token = localStorage.getItem("sellerToken");
+      if (!token) {
+        toast.error("Please login as seller");
+        navigate("/seller");
+        return;
+      }
+
+      const { data } = await axios.get(`${BACKEND_URL}/api/order/seller`, {
+        headers: {
+          Authorization: `Bearer ${token}`, // Token in headers
+        },
+        withCredentials: true, // Only if backend uses cookies
+      });
 
       if (data.success) {
         setOrders(data.orders);
@@ -741,18 +412,33 @@ const Orders = () => {
     }
   };
 
+  // Cancel an order
   const cancelOrder = async (orderId) => {
     try {
+      const token = localStorage.getItem("sellerToken");
+      if (!token) {
+        toast.error("Please login as seller");
+        navigate("/seller");
+        return;
+      }
+
       const { data } = await axios.put(
-        `/api/order/cancel/${orderId}`,
+        `${BACKEND_URL}/api/order/cancel/${orderId}`,
         {},
-        { withCredentials: true }
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+          withCredentials: true,
+        }
       );
 
       if (data.success) {
         toast.success("Order cancelled successfully!");
-        setOrders((prev) =>
-          prev.map((o) => (o._id === orderId ? { ...o, status: "Cancelled" } : o))
+        setOrders((prevOrders) =>
+          prevOrders.map((order) =>
+            order._id === orderId ? { ...order, status: "Cancelled" } : order
+          )
         );
       } else {
         toast.error(data.message);
@@ -769,46 +455,91 @@ const Orders = () => {
   return (
     <div className="md:p-10 p-4 space-y-4">
       <h2 className="text-lg font-medium">Orders List</h2>
+
       {orders.length > 0 ? (
-        orders.map((order, idx) => (
-          <div key={idx} className="flex flex-col md:grid md:grid-cols-[2fr_1fr_1fr_1fr] md:items-center gap-5 p-5 max-w-4xl rounded-md border border-gray-300 text-gray-800">
+        orders.map((order, index) => (
+          <div
+            key={index}
+            className="flex flex-col md:grid md:grid-cols-[2fr_1fr_1fr_1fr] md:items-center gap-5 p-5 max-w-4xl rounded-md border border-gray-300 text-gray-800"
+          >
             {/* Product Info */}
             <div className="flex gap-5">
               <img
                 className="w-12 h-12 object-cover opacity-60"
-                src={order.items[0]?.product?.image?.length ? `/images/${order.items[0].product.image[0]}` : "/placeholder.png"}
-                alt={order.items[0]?.product?.name || "Deleted"}
+                src={
+                  order.items[0]?.product?.image?.length > 0
+                    ? `${BACKEND_URL}/images/${order.items[0].product.image[0]}`
+                    : "/placeholder.png"
+                }
+                alt={order.items[0]?.product?.name || "Product Deleted"}
               />
               <div>
-                {order.items.map((item, i) => (
-                  <p key={i} className="font-medium">
-                    {item?.product?.name || "Deleted"} <span className={item.quantity < 2 ? "hidden" : "text-indigo-500"}>x {item.quantity}</span>
-                  </p>
+                {order.items.map((item, idx) => (
+                  <div key={idx} className="flex flex-col justify-center">
+                    <p className="font-medium">
+                      {item?.product?.name || "Product Deleted"}{" "}
+                      <span
+                        className={`text-indigo-500 ${
+                          item.quantity < 2 ? "hidden" : ""
+                        }`}
+                      >
+                        x {item.quantity}
+                      </span>
+                    </p>
+                  </div>
                 ))}
               </div>
             </div>
 
             {/* Address */}
             <div className="text-sm">
-              <p className="font-medium mb-1">{order.address?.firstName} {order.address?.lastName}</p>
-              <p>{order.address?.street}, {order.address?.city}, {order.address?.state}, {order.address?.zipcode}, {order.address?.country}</p>
+              <p className="font-medium mb-1">
+                {order.address?.firstName} {order.address?.lastName}
+              </p>
+              <p>
+                {order.address?.street}, {order.address?.city},{" "}
+                {order.address?.state}, {order.address?.zipcode},{" "}
+                {order.address?.country}
+              </p>
             </div>
 
             {/* Amount */}
-            <p className="font-medium text-base my-auto text-black/70">${order.amount}</p>
+            <p className="font-medium text-base my-auto text-black/70">
+              ${order.amount}
+            </p>
 
             {/* Payment & Status */}
             <div className="flex flex-col text-sm gap-2">
               <p>Method: {order.paymentType}</p>
-              <p>Date: {order.orderDate || new Date(order.createdAt).toLocaleString()}</p>
+              <p>
+                Date:{" "}
+                {order.orderDate || new Date(order.createdAt).toLocaleString()}
+              </p>
               <p>Payment: {order.isPaid ? "Paid" : "Pending"}</p>
               <p>
-                Status: <span className={order.status === "Cancelled" ? "text-red-600" : order.status === "Delivered" ? "text-green-600" : "text-yellow-600"}>{order.status || "Pending"}</span>
+                Status:{" "}
+                <span
+                  className={`font-semibold ${
+                    order.status === "Cancelled"
+                      ? "text-red-600"
+                      : order.status === "Delivered"
+                      ? "text-green-600"
+                      : "text-yellow-600"
+                  }`}
+                >
+                  {order.status || "Pending"}
+                </span>
               </p>
+
+              {/* Cancel Button */}
               <button
+                className={`px-4 py-1 rounded font-medium mt-2 ${
+                  order.status === "Cancelled"
+                    ? "bg-gray-400 text-white cursor-not-allowed"
+                    : "bg-red-500 text-white hover:bg-red-600"
+                }`}
                 disabled={order.status === "Cancelled"}
                 onClick={() => cancelOrder(order._id)}
-                className={`px-4 py-1 rounded font-medium mt-2 ${order.status === "Cancelled" ? "bg-gray-400 cursor-not-allowed" : "bg-red-500 text-white hover:bg-red-600"}`}
               >
                 {order.status === "Cancelled" ? "Cancelled" : "Cancel Order"}
               </button>
