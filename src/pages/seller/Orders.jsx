@@ -505,7 +505,7 @@ const Orders = () => {
 
             {/* Amount */}
             <p className="font-medium text-base my-auto text-black/70">
-              ${order.amount}
+              ₹{order.amount}
             </p>
 
             {/* Payment & Status */}

@@ -430,7 +430,7 @@ const MyOrders = () => {
           <p className="flex flex-wrap justify-between items-center gap-4 mb-4">
             <span>OrderId: {order._id}</span>
             <span>Payment: {order.paymentType}</span>
-            <span>Total Amount: ${order.amount}</span>
+            <span>Total Amount: ₹{order.amount}</span>
 
             <button
               className={`px-4 py-1 rounded font-medium ${
@@ -498,7 +498,7 @@ const MyOrders = () => {
               </div>
 
               <p className="text-lg">
-                Amount: $
+                Amount: ₹
                 {item?.product?.offerPrice && item?.quantity
                   ? item.product.offerPrice * item.quantity
                   : "0"}
